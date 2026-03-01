@@ -155,6 +155,12 @@ class TimeRegistrationService:
                     df[self.__timeregistrations_date_column].astype(str) == str(date)
                 ]
 
+            # Convert date column to string format (date only, no time) before converting to dict
+            if not filtered_df.empty and self.__timeregistrations_date_column in filtered_df.columns:
+                filtered_df[self.__timeregistrations_date_column] = filtered_df[
+                    self.__timeregistrations_date_column
+                ].dt.strftime('%Y-%m-%d')
+
             # Convert to list of dictionaries
             registrations = filtered_df.to_dict("records")
 

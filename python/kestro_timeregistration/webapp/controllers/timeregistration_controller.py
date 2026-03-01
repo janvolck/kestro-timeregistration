@@ -35,6 +35,23 @@ def employees():
     return Response(json_response, mimetype="application/json")
 
 
+@api.route("/registrations")
+def registrations():
+    if not time_registration_service:
+        abort(500)
+
+    # Get date parameter from query string
+    date = request.args.get("date")
+    if not date:
+        abort(400, description="Date parameter is required")
+
+    # Use json.dumps with sort_keys=False to preserve field order
+    registrations_data = time_registration_service.get_registrations_by_date(date)
+    json_response = json.dumps(registrations_data, sort_keys=False, ensure_ascii=False)
+
+    return Response(json_response, mimetype="application/json")
+
+
 @api.route("/register", methods=["POST"])
 def register_time():
     if not time_registration_service:

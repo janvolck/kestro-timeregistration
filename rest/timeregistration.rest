@@ -7,3 +7,7 @@ GET http://{{host}}:{{port}}/api/kestro/timeregistration/projects
 
 ### GET employees
 GET http://{{host}}:{{port}}/api/kestro/timeregistration/employees
+
+
+### GET registrations
+GET http://{{host}}:{{port}}/api/kestro/timeregistration/registrations?date=2026-03-01
