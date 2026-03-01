@@ -41,13 +41,15 @@ def register_time():
         abort(500)
 
     data = request.get_json()
-    employee_id = data.get("employee_id")
-    project_id = data.get("project_id")
+
+    # Extract employee and project objects
+    employee = data.get("employee")
+    project = data.get("project")
     hours = data.get("hours")
     date = data.get("date")
 
-    if not all([employee_id, project_id, hours, date]):
+    if not all([employee, project, hours, date]):
         abort(400, description="Missing required fields")
 
-    time_registration_service.register_time(employee_id, project_id, hours, date)
+    time_registration_service.register_time(employee, project, hours, date)
     return jsonify({"message": "Time registered successfully"})

@@ -1,9 +1,23 @@
 {
   "nav.projects": "Projecten",
+  "nav.timeRegistration": "Tijdregistratie",
   "projects.title": "Projecten",
   "projects.refresh": "Vernieuwen",
   "projects.loading": "Bezig met laden...",
   "projects.noProjects": "Geen projecten gevonden.",
   "projects.error": "Fout bij het laden van projecten. Probeer het opnieuw.",
-  "projects.tryAgain": "Probeer Opnieuw"
+  "projects.tryAgain": "Probeer Opnieuw",
+  "timeRegistration.title": "Tijdregistratie",
+  "timeRegistration.project": "Project",
+  "timeRegistration.employee": "Medewerker",
+  "timeRegistration.hours": "Uren",
+  "timeRegistration.date": "Datum",
+  "timeRegistration.submit": "Tijd Registreren",
+  "timeRegistration.loading": "Bezig met laden...",
+  "timeRegistration.submitting": "Verzenden...",
+  "timeRegistration.success": "Tijdregistratie succesvol!",
+  "timeRegistration.error": "Tijdregistratie mislukt. Probeer opnieuw.",
+  "timeRegistration.selectProject": "Selecteer een project",
+  "timeRegistration.selectEmployee": "Selecteer medewerker",
+  "timeRegistration.selectHours": "Selecteer uren"
 }

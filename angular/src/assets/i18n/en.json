@@ -1,9 +1,23 @@
 {
   "nav.projects": "Projects",
+  "nav.timeRegistration": "Time Registration",
   "projects.title": "Projects",
   "projects.refresh": "Refresh",
   "projects.loading": "Loading...",
   "projects.noProjects": "No projects found.",
   "projects.error": "Failed to load projects. Please try again.",
-  "projects.tryAgain": "Try Again"
+  "projects.tryAgain": "Try Again",
+  "timeRegistration.title": "Time Registration",
+  "timeRegistration.project": "Project",
+  "timeRegistration.employee": "Employee",
+  "timeRegistration.hours": "Hours",
+  "timeRegistration.date": "Date",
+  "timeRegistration.submit": "Register Time",
+  "timeRegistration.loading": "Loading...",
+  "timeRegistration.submitting": "Submitting...",
+  "timeRegistration.success": "Time registration successful!",
+  "timeRegistration.error": "Failed to register time. Please try again.",
+  "timeRegistration.selectProject": "Select a project",
+  "timeRegistration.selectEmployee": "Select employee",
+  "timeRegistration.selectHours": "Select hours"
 }

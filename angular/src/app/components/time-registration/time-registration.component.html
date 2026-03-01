@@ -1,0 +1,100 @@
+<div class="time-registration-container">
+  <div class="time-registration-header">
+    <h2>{{ timeRegistrationTitle() }}</h2>
+  </div>
+
+  <div class="time-registration-content">
+    @if (loading()) {
+      <div class="loading">{{ loadingLabel() }}</div>
+    } @else {
+      @if (success()) {
+        <div class="success-message">
+          {{ successMessage() }}
+        </div>
+      }
+
+      @if (error()) {
+        <div class="error-message">
+          {{ errorMessage() }}
+        </div>
+      }
+
+      <form class="time-registration-form" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="project">{{ projectLabel() }}</label>
+          <select
+            id="project"
+            class="form-select"
+            [value]="selectedProjectId() || ''"
+            (change)="onProjectChange($event)"
+            required>
+            <option value="">{{ selectProjectPlaceholder() }}</option>
+            @for (project of projects(); track getProjectId(project)) {
+              <option [value]="getProjectId(project)">
+                {{ getProjectDisplayValue(project) }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="employee">{{ employeeLabel() }}</label>
+          <select
+            id="employee"
+            class="form-select"
+            [value]="selectedEmployeeId() || ''"
+            (change)="onEmployeeChange($event)"
+            required>
+            <option value="">{{ selectEmployeePlaceholder() }}</option>
+            @for (employee of employees(); track getEmployeeId(employee)) {
+              <option [value]="getEmployeeId(employee)">
+                {{ getEmployeeDisplayValue(employee) }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="hours">{{ hoursLabel() }}</label>
+          <select
+            id="hours"
+            class="form-select"
+            [value]="selectedHours() || ''"
+            (change)="onHoursChange($event)"
+            required>
+            <option value="">{{ selectHoursPlaceholder() }}</option>
+            @for (option of hoursOptions(); track option.value) {
+              <option [value]="option.value">
+                {{ option.label }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="date">{{ dateLabel() }}</label>
+          <input
+            type="date"
+            id="date"
+            class="form-input"
+            [value]="selectedDate()"
+            (change)="onDateChange($event)"
+            required>
+        </div>
+
+        <div class="form-actions">
+          <button
+            type="submit"
+            class="submit-btn"
+            [disabled]="!isFormValid() || submitting()">
+            @if (submitting()) {
+              {{ submittingLabel() }}
+            } @else {
+              {{ submitLabel() }}
+            }
+          </button>
+        </div>
+      </form>
+    }
+  </div>
+</div>

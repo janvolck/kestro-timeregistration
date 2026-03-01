@@ -1,0 +1,126 @@
+.time-registration-container {
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.time-registration-header {
+  margin-bottom: 20px;
+}
+
+.time-registration-header h2 {
+  color: #333;
+  font-size: 24px;
+  margin: 0;
+}
+
+.loading {
+  text-align: center;
+  padding: 20px;
+  font-size: 16px;
+  color: #666;
+}
+
+.success-message {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+  border-radius: 4px;
+  padding: 12px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  padding: 12px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.time-registration-form {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #333;
+  font-size: 14px;
+}
+
+.form-select,
+.form-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: white;
+  box-sizing: border-box;
+}
+
+.form-select:focus,
+.form-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.form-select:disabled,
+.form-input:disabled {
+  background-color: #e9ecef;
+  opacity: 1;
+}
+
+.form-actions {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.submit-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.submit-btn:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.submit-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5);
+}
+
+@media (max-width: 768px) {
+  .time-registration-container {
+    padding: 10px;
+  }
+
+  .time-registration-form {
+    padding: 15px;
+  }
+}

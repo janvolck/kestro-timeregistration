@@ -1,5 +1,5 @@
 import { Component, OnInit, signal, computed } from '@angular/core';
-import { ProjectsService, Project } from '../../services/projects.service';
+import { TimeRegistrationService, Project } from '../../services/time-registration.service';
 import { TranslationService } from '../../services/translation.service';
 
 @Component({
@@ -24,7 +24,7 @@ export class ProjectsComponent implements OnInit {
   tryAgainLabel = computed(() => this.translationService.translate('projects.tryAgain', 'Try Again'));
 
   constructor(
-    private projectsService: ProjectsService,
+    private timeRegistrationService: TimeRegistrationService,
     private translationService: TranslationService
   ) {}
 
@@ -36,7 +36,7 @@ export class ProjectsComponent implements OnInit {
     this.loading.set(true);
     this.error.set(null);
 
-    this.projectsService.getProjects().subscribe({
+    this.timeRegistrationService.getProjects().subscribe({
       next: (projects) => {
         console.log('Projects received:', projects);
         console.log('Number of projects:', projects.length);
