@@ -1,9 +1,9 @@
 <header class="header">
-  <h1>{{ appTitle() }}</h1>
+  <h1>{{ appTitle() }} <span class="date">{{ formatDate(currentDateTime()) }}</span> <span class="time">{{ formatTime(currentDateTime()) }}</span></h1>
   <nav>
+    <a routerLink="/projects" routerLinkActive="active">{{ projectsLabel() }}</a>
     <a routerLink="/time-registration" routerLinkActive="active">{{ timeRegistrationLabel() }}</a>
     <a routerLink="/registrations" routerLinkActive="active">{{ registrationsLabel() }}</a>
-    <a routerLink="/projects" routerLinkActive="active">{{ projectsLabel() }}</a>
   </nav>
 </header>
 

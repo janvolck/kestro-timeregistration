@@ -1,4 +1,4 @@
-import { Component, signal, OnInit, computed, Inject } from '@angular/core';
+import { Component, signal, OnInit, OnDestroy, computed, Inject } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { DOCUMENT } from '@angular/common';
 import { Title } from '@angular/platform-browser';
@@ -11,11 +11,15 @@ import { environment } from '../environments/environment';
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App implements OnInit {
+export class App implements OnInit, OnDestroy {
   protected readonly title = signal('angular');
+  private timeInterval?: number;
 
   // App title comes from environment for customer-specific branding
   appTitle = signal(environment.appTitle);
+
+  // Current date and time, updated every 600ms
+  currentDateTime = signal(new Date());
 
   // Navigation labels still use translations for language support
   projectsLabel = computed(() => this.translationService.translate('nav.projects', 'Projects'));
@@ -37,6 +41,16 @@ export class App implements OnInit {
 
     // Set favicon from environment
     this.setFavicon(environment.faviconPath);
+
+    // Start the time update interval (600ms)
+    this.startTimeUpdate();
+  }
+
+  ngOnDestroy() {
+    // Clean up the interval when component is destroyed
+    if (this.timeInterval) {
+      clearInterval(this.timeInterval);
+    }
   }
 
   private setFavicon(faviconPath: string): void {
@@ -54,5 +68,27 @@ export class App implements OnInit {
 
     const head = this.document.getElementsByTagName('head')[0];
     head.appendChild(link);
+  }
+
+  private startTimeUpdate(): void {
+    // Update time immediately
+    this.currentDateTime.set(new Date());
+
+    // Set up interval to update every 600ms
+    this.timeInterval = window.setInterval(() => {
+      this.currentDateTime.set(new Date());
+    }, 600);
+  }
+
+  formatDateTime(date: Date): string {
+    return date.toLocaleString();
+  }
+
+  formatDate(date: Date): string {
+    return date.toLocaleDateString();
+  }
+
+  formatTime(date: Date): string {
+    return date.toLocaleTimeString();
   }
 }
