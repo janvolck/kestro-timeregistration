@@ -1,6 +1,7 @@
 {
   "nav.projects": "Projects",
   "nav.timeRegistration": "Time Registration",
+  "nav.registrations": "View Registrations",
   "projects.title": "Projects",
   "projects.refresh": "Refresh",
   "projects.loading": "Loading...",

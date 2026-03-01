@@ -1,0 +1,60 @@
+<div class="registrations-container">
+  <div class="registrations-header">
+    <h2>{{ titleLabel() }}</h2>
+    <div class="date-selector">
+      <label for="date">{{ selectDateLabel() }}</label>
+      <input
+        type="date"
+        id="date"
+        [(ngModel)]="selectedDate"
+        (change)="onDateChange()"
+        class="date-input"
+      />
+    </div>
+  </div>
+
+  <div class="registrations-content">
+    @if (registrations().length > 0) {
+      <div class="summary">
+        <strong>{{ totalHoursLabel() }} {{ getTotalHours() }}</strong>
+      </div>
+
+      <div class="registrations-grid">
+        <div class="grid-header">
+          @for (header of columnHeaders(); track header) {
+            <div class="grid-cell header">{{ header }}</div>
+          }
+        </div>
+
+        @for (registration of registrations(); track trackByRegistrationId($index, registration)) {
+          <div class="grid-row">
+            @for (header of columnHeaders(); track header) {
+              <div class="grid-cell data" [attr.data-label]="header">
+                {{ getRegistrationValue(registration, header) }}
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+
+    @if (registrations().length === 0 && !isLoading() && !error()) {
+      <div class="no-data">
+        <p>{{ noDataLabel() }} {{ selectedDate }}</p>
+      </div>
+    }
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading">
+      <p>{{ loadingLabel() }}</p>
+    </div>
+  }
+
+  @if (error()) {
+    <div class="error">
+      <p class="error-message">{{ error() }}</p>
+      <button class="retry-btn" (click)="fetchRegistrations()">Try Again</button>
+    </div>
+  }
+</div>

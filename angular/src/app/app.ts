@@ -20,6 +20,7 @@ export class App implements OnInit {
   // Navigation labels still use translations for language support
   projectsLabel = computed(() => this.translationService.translate('nav.projects', 'Projects'));
   timeRegistrationLabel = computed(() => this.translationService.translate('nav.timeRegistration', 'Time Registration'));
+  registrationsLabel = computed(() => this.translationService.translate('nav.registrations', 'View Registrations'));
 
   constructor(
     private translationService: TranslationService,

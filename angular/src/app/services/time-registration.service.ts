@@ -41,6 +41,10 @@ export class TimeRegistrationService {
     return this.http.get<Employee[]>(`${this.apiUrl}/employees`);
   }
 
+  getRegistrations(date: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/registrations?date=${date}`);
+  }
+
   registerTime(timeRegistration: TimeRegistrationRequest): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, timeRegistration);
   }
