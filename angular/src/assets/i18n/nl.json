@@ -1,0 +1,9 @@
+{
+  "nav.projects": "Projecten",
+  "projects.title": "Projecten",
+  "projects.refresh": "Vernieuwen",
+  "projects.loading": "Bezig met laden...",
+  "projects.noProjects": "Geen projecten gevonden.",
+  "projects.error": "Fout bij het laden van projecten. Probeer het opnieuw.",
+  "projects.tryAgain": "Probeer Opnieuw"
+}

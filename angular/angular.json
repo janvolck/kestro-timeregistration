@@ -29,7 +29,7 @@
             ]
           },
           "configurations": {
-            "production": {
+            "cleymans": {
               "budgets": [
                 {
                   "type": "initial",
@@ -50,13 +50,13 @@
               "sourceMap": true
             }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": "development"
         },
         "serve": {
           "builder": "@angular/build:dev-server",
           "configurations": {
-            "production": {
-              "buildTarget": "angular:build:production"
+            "cleymans": {
+              "buildTarget": "angular:build:cleymans"
             },
             "development": {
               "buildTarget": "angular:build:development"

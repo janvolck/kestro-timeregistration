@@ -1,0 +1,9 @@
+{
+  "nav.projects": "Projects",
+  "projects.title": "Projects",
+  "projects.refresh": "Refresh",
+  "projects.loading": "Loading...",
+  "projects.noProjects": "No projects found.",
+  "projects.error": "Failed to load projects. Please try again.",
+  "projects.tryAgain": "Try Again"
+}

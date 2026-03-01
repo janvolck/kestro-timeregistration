@@ -1,5 +1,6 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { ProjectsService, Project } from '../../services/projects.service';
+import { TranslationService } from '../../services/translation.service';
 
 @Component({
   selector: 'app-projects',
@@ -14,7 +15,18 @@ export class ProjectsComponent implements OnInit {
   error = signal<string | null>(null);
   columnHeaders = signal<string[]>([]);
 
-  constructor(private projectsService: ProjectsService) {}
+  // Computed translations
+  projectsTitle = computed(() => this.translationService.translate('projects.title', 'Projects'));
+  refreshLabel = computed(() => this.translationService.translate('projects.refresh', 'Refresh'));
+  loadingLabel = computed(() => this.translationService.translate('projects.loading', 'Loading...'));
+  noProjectsLabel = computed(() => this.translationService.translate('projects.noProjects', 'No projects found.'));
+  errorLabel = computed(() => this.translationService.translate('projects.error', 'Failed to load projects. Please try again.'));
+  tryAgainLabel = computed(() => this.translationService.translate('projects.tryAgain', 'Try Again'));
+
+  constructor(
+    private projectsService: ProjectsService,
+    private translationService: TranslationService
+  ) {}
 
   ngOnInit(): void {
     this.loadProjects();
@@ -47,7 +59,7 @@ export class ProjectsComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error loading projects:', err);
-        this.error.set('Failed to load projects. Please try again.');
+        this.error.set(this.errorLabel());
         this.loading.set(false);
       }
     });

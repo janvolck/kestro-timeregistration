@@ -1,14 +1,14 @@
 <div class="projects-container">
   <div class="projects-header">
-    <h2>Projects</h2>
+    <h2>{{ projectsTitle() }}</h2>
     <button
       class="refresh-btn"
       (click)="refresh()"
       [disabled]="loading()">
       @if (loading()) {
-        Loading...
+        {{ loadingLabel() }}
       } @else {
-        Refresh
+        {{ refreshLabel() }}
       }
     </button>
   </div>
@@ -36,21 +36,21 @@
 
     @if (projects().length === 0 && !loading() && !error()) {
       <div class="no-projects">
-        <p>No projects found.</p>
+        <p>{{ noProjectsLabel() }}</p>
       </div>
     }
   </div>
 
   @if (loading()) {
     <div class="loading">
-      <p>Loading projects...</p>
+      <p>{{ loadingLabel() }}</p>
     </div>
   }
 
   @if (error()) {
     <div class="error">
       <p class="error-message">{{ error() }}</p>
-      <button class="retry-btn" (click)="refresh()">Try Again</button>
+      <button class="retry-btn" (click)="refresh()">{{ tryAgainLabel() }}</button>
     </div>
   }
 </div>
