@@ -15,9 +15,8 @@ class TimeRegistrationService:
         self.__log.debug("TimeRegistrationService created")
         self.__projects_path: str = ""
         self.__projects_sheet: str = ""
-        self.__projects = []
+        self.__employees_path: str = ""
         self.__employees_sheet: str = ""
-        self.__employees = []
         self.__timeregistrations_path: str = ""
         self.__timeregistrations_sheet: str = ""
         self.__timeregistrations_hour_column: str = "Hours"
@@ -35,12 +34,8 @@ class TimeRegistrationService:
         ):
             self.__projects_path = config.get("projects", "path")
             self.__projects_sheet = config.get("projects", "sheet")
-
-            self.__projects = self._load_projects(
-                self.__projects_path, self.__projects_sheet
-            )
             self.__log.debug(
-                f"TimeRegistrationService loaded projects: {self.__projects}"
+                f"TimeRegistrationService configured projects: {self.__projects_path}:{self.__projects_sheet}"
             )
 
         if config.has_option("timeregistrations", "path"):
@@ -53,8 +48,9 @@ class TimeRegistrationService:
 
             if config.has_option("timeregistrations", "employees"):
                 self.__employees_sheet = config.get("timeregistrations", "employees")
-                self.__employees = self._load_employees(
-                    self.__timeregistrations_path, self.__employees_sheet
+                self.__employees_path = self.__timeregistrations_path
+                self.__log.debug(
+                    f"TimeRegistrationService configured employees: {self.__employees_path}:{self.__employees_sheet}"
                 )
 
         if config.has_option("timeregistrations", "hour_column"):
@@ -71,36 +67,18 @@ class TimeRegistrationService:
         pass
 
     def projects(self):
-        return self.__projects
+        """Load and return current projects from Excel file."""
+        if not self.__projects_path or not self.__projects_sheet:
+            self.__log.warning("Projects not configured")
+            return []
+        return self._load_projects(self.__projects_path, self.__projects_sheet)
 
     def employees(self):
-        return self.__employees
-
-    def refresh(self):
-        """Reload projects and employees data from Excel files."""
-        self.__log.debug("Refreshing projects and employees data")
-
-        # Refresh projects if configured
-        if self.__projects_path and self.__projects_sheet:
-            old_count = len(self.__projects)
-            self.__projects = self._load_projects(
-                self.__projects_path, self.__projects_sheet
-            )
-            new_count = len(self.__projects)
-            self.__log.info(f"Refreshed projects: {old_count} -> {new_count} projects")
-
-        # Refresh employees if configured
-        if self.__timeregistrations_path and self.__employees_sheet:
-            old_count = len(self.__employees)
-            self.__employees = self._load_employees(
-                self.__timeregistrations_path, self.__employees_sheet
-            )
-            new_count = len(self.__employees)
-            self.__log.info(
-                f"Refreshed employees: {old_count} -> {new_count} employees"
-            )
-
-        self.__log.debug("Data refresh completed")
+        """Load and return current employees from Excel file."""
+        if not self.__employees_path or not self.__employees_sheet:
+            self.__log.warning("Employees not configured")
+            return []
+        return self._load_employees(self.__employees_path, self.__employees_sheet)
 
     def get_registrations_by_date(self, date: str):
         """Load time registrations for a specific date.
