@@ -1,0 +1,56 @@
+<div class="projects-container">
+  <div class="projects-header">
+    <h2>Projects</h2>
+    <button
+      class="refresh-btn"
+      (click)="refresh()"
+      [disabled]="loading()">
+      @if (loading()) {
+        Loading...
+      } @else {
+        Refresh
+      }
+    </button>
+  </div>
+
+  <div class="projects-content">
+    @if (projects().length > 0) {
+      <div class="projects-grid">
+        <div class="grid-header">
+          @for (header of columnHeaders(); track header) {
+            <div class="grid-cell header">{{ header }}</div>
+          }
+        </div>
+
+        @for (project of projects(); track trackByProjectId($index, project)) {
+          <div class="grid-row">
+            @for (header of columnHeaders(); track header) {
+              <div class="grid-cell data" [attr.data-label]="header">
+                {{ getProjectValue(project, header) }}
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+
+    @if (projects().length === 0 && !loading() && !error()) {
+      <div class="no-projects">
+        <p>No projects found.</p>
+      </div>
+    }
+  </div>
+
+  @if (loading()) {
+    <div class="loading">
+      <p>Loading projects...</p>
+    </div>
+  }
+
+  @if (error()) {
+    <div class="error">
+      <p class="error-message">{{ error() }}</p>
+      <button class="retry-btn" (click)="refresh()">Try Again</button>
+    </div>
+  }
+</div>

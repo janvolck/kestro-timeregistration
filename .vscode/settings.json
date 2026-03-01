@@ -1,0 +1,8 @@
+{
+    "rest-client.environmentVariables": {
+        "localhost": {
+            "host": "localhost",
+            "port": "5000"
+        }
+    }
+}

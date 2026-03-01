@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: row;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #data-view {
+            flex: 3;
+            border: none;
+        }
+
+        /* The Excel Sheet */
+        #input-dialog {
+            flex: 1;
+            border-left: 5px solid #333;
+        }
+
+        /* The Form */
+    </style>
+</head>
+
+<body>
+    <iframe id="data-view"
+        src="https://1drv.ms/x/c/2aca9b0be7dd0a60/IQS5OVhSLmuWTpkoeEzIaKHIAaMbPzCtVIJ1ilS1PumaGkg?em=2&wdAllowInteractivity=False&Item='Sheet1'!A1%3AG29&wdInConfigurator=True&wdInConfigurator=True"></iframe>
+
+    <iframe id="input-dialog"
+        src="https://forms.office.com/r/tp4gZHLp9q"></iframe>
+
+    <script>
+        // Optional: Refresh the Excel view every 30 seconds to show new form entries
+        setInterval(function () {
+            document.getElementById('data-view').src = document.getElementById('data-view').src;
+        }, 30000);
+    </script>
+</body>
+
+</html>
+
+
