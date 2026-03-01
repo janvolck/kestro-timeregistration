@@ -2,6 +2,8 @@
 ### GET global status
 GET http://{{host}}:{{port}}/api/kestro/status
 
-### GET time registration projects
+### GET projects
 GET http://{{host}}:{{port}}/api/kestro/timeregistration/projects
 
+### GET employees
+GET http://{{host}}:{{port}}/api/kestro/timeregistration/employees

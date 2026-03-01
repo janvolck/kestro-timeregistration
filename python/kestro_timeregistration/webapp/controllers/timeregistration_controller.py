@@ -19,5 +19,35 @@ def projects():
     # Use json.dumps with sort_keys=False to preserve field order
     projects_data = time_registration_service.projects()
     json_response = json.dumps(projects_data, sort_keys=False, ensure_ascii=False)
-    
-    return Response(json_response, mimetype='application/json')
+
+    return Response(json_response, mimetype="application/json")
+
+
+@api.route("/employees")
+def employees():
+    if not time_registration_service:
+        abort(500)
+
+    # Use json.dumps with sort_keys=False to preserve field order
+    employees_data = time_registration_service.employees()
+    json_response = json.dumps(employees_data, sort_keys=False, ensure_ascii=False)
+
+    return Response(json_response, mimetype="application/json")
+
+
+@api.route("/register", methods=["POST"])
+def register_time():
+    if not time_registration_service:
+        abort(500)
+
+    data = request.get_json()
+    employee_id = data.get("employee_id")
+    project_id = data.get("project_id")
+    hours = data.get("hours")
+    date = data.get("date")
+
+    if not all([employee_id, project_id, hours, date]):
+        abort(400, description="Missing required fields")
+
+    time_registration_service.register_time(employee_id, project_id, hours, date)
+    return jsonify({"message": "Time registered successfully"})
