@@ -14,15 +14,15 @@ import { TranslationService } from '../../services/translation.service';
 export class TimeRegistrationComponent implements OnInit {
   projects = signal<Project[]>([]);
   employees = signal<Employee[]>([]);
-  hoursOptions = signal<{value: number, label: string}[]>([]);
+  hoursOptions = signal<{ value: number, label: string }[]>([]);
   loading = signal<boolean>(false);
   submitting = signal<boolean>(false);
   error = signal<string | null>(null);
   success = signal<boolean>(false);
 
   // Form data
-  selectedProjectId = signal<number | null>(null);
-  selectedEmployeeId = signal<number | null>(null);
+  selectedProjectId = signal<string | number | null>(null);
+  selectedEmployeeId = signal<string | number | null>(null);
   selectedHours = signal<number | null>(null);
   selectedDate = signal<string>(this.getCurrentDate());
 
@@ -58,7 +58,7 @@ export class TimeRegistrationComponent implements OnInit {
   }
 
   private generateHoursOptions(): void {
-    const options: {value: number, label: string}[] = [];
+    const options: { value: number, label: string }[] = [];
 
     // Start from 0.25 (15 minutes) and increment by 0.25 (15 minutes) until 8.00
     for (let i = 0.25; i <= 8.0; i += 0.25) {
@@ -95,13 +95,13 @@ export class TimeRegistrationComponent implements OnInit {
   onProjectChange(event: Event): void {
     const target = event.target as HTMLSelectElement;
     const value = target.value;
-    this.selectedProjectId.set(value ? parseInt(value, 10) : null);
+    this.selectedProjectId.set(value || null);
   }
 
   onEmployeeChange(event: Event): void {
     const target = event.target as HTMLSelectElement;
     const value = target.value;
-    this.selectedEmployeeId.set(value ? parseInt(value, 10) : null);
+    this.selectedEmployeeId.set(value || null);
   }
 
   onHoursChange(event: Event): void {
@@ -110,16 +110,10 @@ export class TimeRegistrationComponent implements OnInit {
     this.selectedHours.set(value ? parseFloat(value) : null);
   }
 
-  onDateChange(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    this.selectedDate.set(target.value);
-  }
-
   isFormValid(): boolean {
     return this.selectedProjectId() !== null &&
-           this.selectedEmployeeId() !== null &&
-           this.selectedHours() !== null &&
-           this.selectedDate() !== '';
+      this.selectedEmployeeId() !== null &&
+      this.selectedHours() !== null;
   }
 
   onSubmit(): void {
@@ -168,32 +162,44 @@ export class TimeRegistrationComponent implements OnInit {
   private getSelectedEmployee(): Employee | null {
     const employeeId = this.selectedEmployeeId();
     if (employeeId === null) return null;
-    return this.employees().find(emp => this.getEmployeeId(emp) === employeeId) || null;
+    return this.employees().find(emp => String(this.getEmployeeId(emp)) === String(employeeId)) || null;
   }
 
   private getSelectedProject(): Project | null {
     const projectId = this.selectedProjectId();
     if (projectId === null) return null;
-    return this.projects().find(proj => this.getProjectId(proj) === projectId) || null;
+    return this.projects().find(proj => String(this.getProjectId(proj)) === String(projectId)) || null;
   }
 
   getProjectDisplayValue(project: Project): string {
-    // Assume the project has a name or title field, adjust based on actual structure
-    return project['name'] || project['title'] || project['project_name'] || JSON.stringify(project);
+    // Iterate over all project properties and collect all values
+    const values = Object.values(project)
+      .filter(value => value != null && typeof value !== 'object' && typeof value !== 'function')
+      .map(value => String(value).trim())
+      .filter(value => value.length > 0);
+
+    return values.length > 0 ? values.join(' - ') : JSON.stringify(project);
   }
 
-  getProjectId(project: Project): number {
-    // Assume the project has an id field, adjust based on actual structure
-    return project['id'] || project['project_id'] || 0;
+  getProjectId(project: Project): string | number {
+    // The first column is always the ID
+    const firstValue = Object.values(project)[0];
+    return firstValue != null ? firstValue : 0;
   }
 
   getEmployeeDisplayValue(employee: Employee): string {
-    // Assume the employee has a name field, adjust based on actual structure
-    return employee['name'] || employee['full_name'] || employee['employee_name'] || JSON.stringify(employee);
+    // Iterate over all employee properties and collect all values
+    const values = Object.values(employee)
+      .filter(value => value != null && typeof value !== 'object' && typeof value !== 'function')
+      .map(value => String(value).trim())
+      .filter(value => value.length > 0);
+
+    return values.length > 0 ? values.join(' - ') : JSON.stringify(employee);
   }
 
-  getEmployeeId(employee: Employee): number {
-    // Assume the employee has an id field, adjust based on actual structure
-    return employee['id'] || employee['employee_id'] || 0;
+  getEmployeeId(employee: Employee): string | number {
+    // The first column is always the ID
+    const firstValue = Object.values(employee)[0];
+    return firstValue != null ? firstValue : 0;
   }
 }

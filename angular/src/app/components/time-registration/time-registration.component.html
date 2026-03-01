@@ -71,17 +71,6 @@
           </select>
         </div>
 
-        <div class="form-group">
-          <label for="date">{{ dateLabel() }}</label>
-          <input
-            type="date"
-            id="date"
-            class="form-input"
-            [value]="selectedDate()"
-            (change)="onDateChange($event)"
-            required>
-        </div>
-
         <div class="form-actions">
           <button
             type="submit"
