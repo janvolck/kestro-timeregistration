@@ -1,11 +1,12 @@
 import { Component, OnInit, signal, computed } from '@angular/core';
 import { TimeRegistrationService, Project } from '../../services/time-registration.service';
 import { TranslationService } from '../../services/translation.service';
+import { TimeRegistrationComponent } from '../time-registration/time-registration.component';
 
 @Component({
   selector: 'app-projects',
   standalone: true,
-  imports: [],
+  imports: [TimeRegistrationComponent],
   templateUrl: './projects.component.html',
   styleUrls: ['./projects.component.css']
 })
@@ -14,6 +15,8 @@ export class ProjectsComponent implements OnInit {
   loading = signal<boolean>(false);
   error = signal<string | null>(null);
   columnHeaders = signal<string[]>([]);
+  showPopup = signal<boolean>(false);
+  selectedProject = signal<Project | null>(null);
 
   // Computed translations
   projectsTitle = computed(() => this.translationService.translate('projects.title', 'Projects'));
@@ -78,5 +81,22 @@ export class ProjectsComponent implements OnInit {
   getProjectValue(project: Project, key: string): string {
     const value = project[key];
     return value != null ? String(value) : '-';
+  }
+
+  onRowClick(project: Project): void {
+    console.log('Row clicked, project:', project);
+    this.selectedProject.set(project);
+    this.showPopup.set(true);
+  }
+
+  closePopup(): void {
+    this.showPopup.set(false);
+    this.selectedProject.set(null);
+  }
+
+  onPopupBackdropClick(event: Event): void {
+    if (event.target === event.currentTarget) {
+      this.closePopup();
+    }
   }
 }

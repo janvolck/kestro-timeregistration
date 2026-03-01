@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, signal, computed, Output, EventEmitter, Input, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TimeRegistrationService, Project, Employee, TimeRegistrationRequest } from '../../services/time-registration.service';
@@ -12,6 +12,9 @@ import { TranslationService } from '../../services/translation.service';
   styleUrls: ['./time-registration.component.css']
 })
 export class TimeRegistrationComponent implements OnInit {
+  @Output() registrationSuccess = new EventEmitter<void>();
+  @Input() preSelectedProject: Project | null = null;
+
   projects = signal<Project[]>([]);
   employees = signal<Employee[]>([]);
   hoursOptions = signal<{ value: number, label: string }[]>([]);
@@ -41,11 +44,39 @@ export class TimeRegistrationComponent implements OnInit {
   selectEmployeePlaceholder = computed(() => this.translationService.translate('timeRegistration.selectEmployee', 'Select employee'));
   selectHoursPlaceholder = computed(() => this.translationService.translate('timeRegistration.selectHours', 'Select hours'));
 
+  // Debug computed property
+  debugSelectedProjectId = computed(() => {
+    const id = this.selectedProjectId();
+    console.log('Template reading selectedProjectId:', id, 'Type:', typeof id);
+    return id;
+  });
+
   constructor(
     private timeRegistrationService: TimeRegistrationService,
     private translationService: TranslationService
   ) {
     this.generateHoursOptions();
+
+    // Effect to handle preSelectedProject changes when projects are loaded
+    effect(() => {
+      const preSelected = this.preSelectedProject;
+      const projectsList = this.projects();
+
+      if (preSelected && projectsList.length > 0) {
+        console.log('Setting preselected project:', preSelected);
+        const projectId = this.getProjectId(preSelected);
+        console.log('Project ID to select:', projectId, 'Type:', typeof projectId);
+
+        // Log all available project IDs for comparison
+        console.log('Available project IDs:', projectsList.map(p => {
+          const id = this.getProjectId(p);
+          return { id, type: typeof id, display: this.getProjectDisplayValue(p) };
+        }));
+
+        this.selectedProjectId.set(projectId);
+        console.log('selectedProjectId after set:', this.selectedProjectId());
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -150,6 +181,9 @@ export class TimeRegistrationComponent implements OnInit {
         this.selectedDate.set(this.getCurrentDate());
         // Hide success message after 3 seconds
         setTimeout(() => this.success.set(false), 3000);
+
+        // Emit success event to parent component
+        this.registrationSuccess.emit();
       },
       error: (error) => {
         console.error('Error registering time:', error);
@@ -201,5 +235,10 @@ export class TimeRegistrationComponent implements OnInit {
     // The first column is always the ID
     const firstValue = Object.values(employee)[0];
     return firstValue != null ? firstValue : 0;
+  }
+
+  // Helper method to convert values to strings for template use
+  toString(value: any): string {
+    return value != null ? String(value) : '';
   }
 }

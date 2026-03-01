@@ -23,7 +23,7 @@
         </div>
 
         @for (project of projects(); track trackByProjectId($index, project)) {
-          <div class="grid-row">
+          <div class="grid-row" (click)="onRowClick(project)">
             @for (header of columnHeaders(); track header) {
               <div class="grid-cell data" [attr.data-label]="header">
                 {{ getProjectValue(project, header) }}
@@ -54,3 +54,17 @@
     </div>
   }
 </div>
+
+<!-- Time Registration Popup -->
+@if (showPopup()) {
+  <div class="popup-overlay" (click)="onPopupBackdropClick($event)">
+    <div class="popup-content">
+      <div class="popup-header">
+        <button class="close-btn" (click)="closePopup()">×</button>
+      </div>
+      <app-time-registration 
+        [preSelectedProject]="selectedProject()" 
+        (registrationSuccess)="closePopup()"></app-time-registration>
+    </div>
+  </div>
+}
