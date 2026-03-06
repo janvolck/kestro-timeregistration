@@ -76,10 +76,18 @@ export class RegistrationsListComponent implements OnInit {
     }, 0);
   }
 
-  trackByRegistrationId(index: number, registration: any): any {
-    // Use the first property value as ID, or fallback to index
-    const firstKey = Object.keys(registration)[0];
-    return firstKey ? registration[firstKey] : index;
+  trackByRegistrationId(index: number, registration: any): string {
+    // Always create a unique composite key that includes the index
+    // This ensures absolute uniqueness even when Id values are duplicated
+    const id = registration.Id || '';
+    const date = registration.Date || '';
+    const customer = registration.Customer || '';
+    const employee = registration.Employee || '';
+    const hours = registration.Hours || 0;
+
+    // Create a composite key that includes index to guarantee uniqueness
+    const compositeKey = `${id}_${date}_${customer}_${employee}_${hours}_${index}`;
+    return compositeKey;
   }
 
   getRegistrationValue(registration: any, key: string): string {

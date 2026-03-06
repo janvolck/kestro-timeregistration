@@ -25,12 +25,12 @@
           <select
             id="project"
             class="form-select"
-            [value]="selectedProjectId() ? toString(selectedProjectId()) : ''"
             (change)="onProjectChange($event)"
             required>
-            <option value="">{{ selectProjectPlaceholder() }}</option>
+            <option value="" [selected]="selectedProjectId() === null || selectedProjectId() === ''">{{ selectProjectPlaceholder() }}</option>
             @for (project of projects(); track getProjectId(project)) {
-              <option [value]="toString(getProjectId(project))">
+              <option [value]="getProjectId(project)"
+                      [selected]="getProjectId(project) === selectedProjectId()">
                 {{ getProjectDisplayValue(project) }}
               </option>
             }

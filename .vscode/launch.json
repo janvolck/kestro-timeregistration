@@ -13,11 +13,19 @@
       "console": "integratedTerminal"
     },
     {
-      "name": "Kestro Time Registration Angular",
+      "name": "Debug Angular in Chrome",
       "type": "chrome",
       "request": "launch",
-      "url": "http://localhost:5000",
-      "webRoot": "${workspaceFolder}/frontend"
+      "url": "http://localhost:4200",
+      "webRoot": "${workspaceFolder}/angular/src",
+      "sourceMaps": true
+    },
+    {
+      "name": "Attach to Chrome",
+      "type": "chrome",
+      "request": "attach",
+      "port": 9222,
+      "webRoot": "${workspaceFolder}/angular/src"
     }
   ]
 }

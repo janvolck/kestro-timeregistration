@@ -1,6 +1,7 @@
-import { Component, OnInit, signal, computed, Output, EventEmitter, Input, effect } from '@angular/core';
+import { Component, OnInit, signal, computed, Output, EventEmitter, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { firstValueFrom } from 'rxjs';
 import { TimeRegistrationService, Project, Employee, TimeRegistrationRequest } from '../../services/time-registration.service';
 import { TranslationService } from '../../services/translation.service';
 
@@ -24,8 +25,8 @@ export class TimeRegistrationComponent implements OnInit {
   success = signal<boolean>(false);
 
   // Form data
-  selectedProjectId = signal<string | number | null>(null);
-  selectedEmployeeId = signal<string | number | null>(null);
+  selectedProjectId = signal<string | null>(null);
+  selectedEmployeeId = signal<string | null>(null);
   selectedHours = signal<number | null>(null);
   selectedDate = signal<string>(this.getCurrentDate());
 
@@ -44,39 +45,11 @@ export class TimeRegistrationComponent implements OnInit {
   selectEmployeePlaceholder = computed(() => this.translationService.translate('timeRegistration.selectEmployee', 'Select employee'));
   selectHoursPlaceholder = computed(() => this.translationService.translate('timeRegistration.selectHours', 'Select hours'));
 
-  // Debug computed property
-  debugSelectedProjectId = computed(() => {
-    const id = this.selectedProjectId();
-    console.log('Template reading selectedProjectId:', id, 'Type:', typeof id);
-    return id;
-  });
-
   constructor(
     private timeRegistrationService: TimeRegistrationService,
     private translationService: TranslationService
   ) {
     this.generateHoursOptions();
-
-    // Effect to handle preSelectedProject changes when projects are loaded
-    effect(() => {
-      const preSelected = this.preSelectedProject;
-      const projectsList = this.projects();
-
-      if (preSelected && projectsList.length > 0) {
-        console.log('Setting preselected project:', preSelected);
-        const projectId = this.getProjectId(preSelected);
-        console.log('Project ID to select:', projectId, 'Type:', typeof projectId);
-
-        // Log all available project IDs for comparison
-        console.log('Available project IDs:', projectsList.map(p => {
-          const id = this.getProjectId(p);
-          return { id, type: typeof id, display: this.getProjectDisplayValue(p) };
-        }));
-
-        this.selectedProjectId.set(projectId);
-        console.log('selectedProjectId after set:', this.selectedProjectId());
-      }
-    });
   }
 
   ngOnInit(): void {
@@ -107,14 +80,17 @@ export class TimeRegistrationComponent implements OnInit {
     this.error.set(null);
 
     // Load projects and employees
-    const projectsPromise = this.timeRegistrationService.getProjects().toPromise();
-    const employeesPromise = this.timeRegistrationService.getEmployees().toPromise();
+    const projectsPromise = firstValueFrom(this.timeRegistrationService.getProjects());
+    const employeesPromise = firstValueFrom(this.timeRegistrationService.getEmployees());
 
     Promise.all([projectsPromise, employeesPromise])
       .then(([projects, employees]) => {
         this.projects.set(projects || []);
         this.employees.set(employees || []);
         this.loading.set(false);
+
+        // Handle preselected project after data is loaded
+        this.handlePreselectedProject();
       })
       .catch((error) => {
         console.error('Error loading data:', error);
@@ -123,10 +99,21 @@ export class TimeRegistrationComponent implements OnInit {
       });
   }
 
+  private handlePreselectedProject(): void {
+    if (!this.preSelectedProject || this.projects().length === 0) {
+      return;
+    }
+
+    const projectId = this.getProjectId(this.preSelectedProject);
+    this.selectedProjectId.set(projectId);
+    console.log('DEBUG: handlePreselectedProject:', projectId, 'type:', typeof projectId);
+  }
+
   onProjectChange(event: Event): void {
     const target = event.target as HTMLSelectElement;
-    const value = target.value;
-    this.selectedProjectId.set(value || null);
+    const projectId = target.value || null;
+    this.selectedProjectId.set(projectId);
+    console.log('DEBUG: onProjectChange:', projectId, 'type:', typeof projectId);
   }
 
   onEmployeeChange(event: Event): void {
@@ -196,13 +183,13 @@ export class TimeRegistrationComponent implements OnInit {
   private getSelectedEmployee(): Employee | null {
     const employeeId = this.selectedEmployeeId();
     if (employeeId === null) return null;
-    return this.employees().find(emp => String(this.getEmployeeId(emp)) === String(employeeId)) || null;
+    return this.employees().find(emp => this.getEmployeeId(emp) === employeeId) || null;
   }
 
   private getSelectedProject(): Project | null {
     const projectId = this.selectedProjectId();
     if (projectId === null) return null;
-    return this.projects().find(proj => String(this.getProjectId(proj)) === String(projectId)) || null;
+    return this.projects().find(proj => this.getProjectId(proj) === projectId) || null;
   }
 
   getProjectDisplayValue(project: Project): string {
@@ -215,10 +202,10 @@ export class TimeRegistrationComponent implements OnInit {
     return values.length > 0 ? values.join(' - ') : JSON.stringify(project);
   }
 
-  getProjectId(project: Project): string | number {
+  getProjectId(project: Project): string {
     // The first column is always the ID
     const firstValue = Object.values(project)[0];
-    return firstValue != null ? firstValue : 0;
+    return firstValue != null ? String(firstValue) : '0';
   }
 
   getEmployeeDisplayValue(employee: Employee): string {
@@ -231,14 +218,9 @@ export class TimeRegistrationComponent implements OnInit {
     return values.length > 0 ? values.join(' - ') : JSON.stringify(employee);
   }
 
-  getEmployeeId(employee: Employee): string | number {
+  getEmployeeId(employee: Employee): string {
     // The first column is always the ID
     const firstValue = Object.values(employee)[0];
-    return firstValue != null ? firstValue : 0;
-  }
-
-  // Helper method to convert values to strings for template use
-  toString(value: any): string {
-    return value != null ? String(value) : '';
+    return firstValue != null ? String(firstValue) : '0';
   }
 }
